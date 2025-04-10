@@ -228,14 +228,21 @@ abstract class Sephpa
         $options['addFileRoutingSlip'] = isset($options['addFileRoutingSlip']) && $options['addFileRoutingSlip'];
         $options['addControlList']     = isset($options['addControlList']) && $options['addControlList'];
         $options['zipToOneFile']       = isset($options['zipToOneFile']) && $options['zipToOneFile'];
+        $options['disableSavingFiles'] = isset($options['zipTodisableSavingFilesOneFile']) && $options['disableSavingFiles'];
+
+        if($options['disableSavingFiles']) {
+            $options['addFileRoutingSlip'] = false;
+            $options['addControlList'] = false;
+            $options['zipToOneFile'] = false;
+        }
 
         if(!isset($options['filenameTemplate']))
             $options['filenameTemplate'] = self::DEFAULT_FILENAME_TEMPLATE;
 
         // check dependencies
-        if(($options['addFileRoutingSlip'] || $options['addControlList'])
-            && !class_exists('\\AbcAeffchen\\SepaDocumentor\\BasicDocumentor'))
-            throw new SephpaInputException('You need to install SepaDocumentor to be able to add File Routing Slips or Control Lists.');
+       if(($options['addFileRoutingSlip'] || $options['addControlList'])
+           && !class_exists('\\AbcAeffchen\\SepaDocumentor\\BasicDocumentor'))
+           throw new SephpaInputException('You need to install SepaDocumentor to be able to add File Routing Slips or Control Lists.');     
 
         if(empty($options['dateFormat']))
             $options['dateFormat'] = 'd.m.Y';
@@ -270,6 +277,7 @@ abstract class Sephpa
      *                       - (string) `dateFormat`: The format a date is represented in the PDF
      *                       files. Default is 'd.m.Y'. See date() documentation for details.
      *                       - (bool) `zipToOneFile`: If true, multiple files get zipped to one file.
+     *                       - (bool) `disableSavingFiles`: If true, no pdf, xml or zip files were saved, Only get the array filename/XML.
      * @return string[][]    Returns a a pair [name, data] for each file
      * @throws SephpaInputException
      * @throws \Mpdf\MpdfException
@@ -446,6 +454,27 @@ abstract class Sephpa
             fwrite($file, $fileData['data']);
             fclose($file);
         }
+    }
+
+    /**
+     * Generates the SEPA file and returned as filename/XML pairs.
+     * all file saving options will set to false
+     *
+     * @param array  $options @see generateOutput() for details.
+     * @throws SephpaInputException
+     * @throws \Mpdf\MpdfException
+     * 
+     * @return array 
+     */
+    public function renderXML($options = []): array
+    {
+        $options = (!is_array($options) ? [] : $options);
+        $options["disableSavingFiles"] = true;
+        
+        $files = $this->generateOutput($options);
+        $files = (!is_array($files) ? [] : $files);
+
+        return $files;
     }
 
     /**

@@ -5,3 +5,4 @@ composer.phar
 .idea/
 tests/output/
 .phpunit.result.cache
+.vscode/

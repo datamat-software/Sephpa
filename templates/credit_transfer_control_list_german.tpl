@@ -54,7 +54,7 @@
     <tr>
         <td style="font-weight: bold;">Empfänger<br>
         IBAN / BIC</td>
-        <td style="font-weight: bold;">Verwendungszweck</td>
+        <td style="font-weight: bold;">Verwendungszweck/Kreditor-Referenz</td>
         <td style="font-weight: bold;"></td>
         <td style="font-weight: bold;">Betrag</td>
     </tr>
@@ -63,7 +63,10 @@
     <tr style="border-bottom: 1px solid;">
         <td style="border-bottom: 1px solid #999;">{{creditor_name}}<br>
         {{iban}} {{ifdef bic}} / {{bic}}{{endif bic}}</td>
-        <td style="border-bottom: 1px solid #999;">{{remittance_information}}</td>
+        <td style="border-bottom: 1px solid #999;">
+        {{ifdef remittance_information}}{{remittance_information}}{{endif remittance_information}}
+        {{ifdef creditor_reference}}{{creditor_reference}}{{endif creditor_reference}}
+        </td>
         <td style="border-bottom: 1px solid #999;"></td>
         <td style="border-bottom: 1px solid #999; text-align: right;">{{amount}}</td>
     </tr>

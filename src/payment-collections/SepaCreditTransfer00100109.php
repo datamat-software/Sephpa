@@ -193,7 +193,12 @@ class SepaCreditTransfer00100109 extends SepaCreditTransferCollection
             $cdtTrfTxInf->addChild('UltmtCdtr')->addChild('Nm', $payment['ultmtCdtr']);
         if(isset($payment['purp']))
             $cdtTrfTxInf->addChild('Purp')->addChild('Cd', $payment['purp']);
-        if(isset($payment['rmtInf']))
+	    if(!empty($payment['cdtrRefInf']))
+            $cdtTrfTxInf->addChild('RmtInf')->addChild('Strd')->addChild('CdtrRefInf')->addChild('Tp');
+            $cdtTrfTxInf->RmtInf->Strd->CdtrRefInf->addChild('Ref', $payment['cdtrRefInf']);
+            $cdtTrfTxInf->RmtInf->Strd->CdtrRefInf->Tp->addChild('CdOrPrtry')->addChild('Cd', 'SCOR');
+            $cdtTrfTxInf->RmtInf->Strd->CdtrRefInf->Tp->addChild('Issr', 'ISO');
+        if(isset($payment['rmtInf']) AND empty($payment['cdtrRefInf']))
             $cdtTrfTxInf->addChild('RmtInf')->addChild('Ustrd', $payment['rmtInf']);
     }
 

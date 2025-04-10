@@ -136,7 +136,9 @@ abstract class SepaDirectDebitCollection implements SepaPaymentCollection
         {
             $tmp = ['debtor_name' => $payment['dbtr'],
                     'iban' => $payment['iban'],
-                    'remittance_information' => isset($payment['rmtInf']) ? $payment['rmtInf'] : '',
+                    'iban' => $payment['iban'],
+                    'remittance_information' => isset($payment['rmtInf']) AND empty($payment['cdtrRefInf']) ? $payment['rmtInf'] : '',
+                    'creditor_reference' => empty($payment['cdtrRefInf'])? '' : $payment['cdtrRefInf'],
                     'amount' => sprintf($moneyFormat['currency'],
                                         number_format($payment['instdAmt'], 2,
                                                       $moneyFormat['dec_point'],
